@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+       .auth-container { max-width: 500px; margin: 80px auto; background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+
+        /* Styles Django's automated form inputs */
+        input[type="text"], input[type="password"] {
+            width: 100%; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 15px; outline: none; transition: border 0.3s; margin-top: 5px; margin-bottom: 20px; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--primary-teal); }
+
+        .error-box { background: #fdecea; color: #e74c3c; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; text-align: center;}
+
+        /* THE FIX: Hide the browser's native disappearing eye icon */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-webkit-reveal {
+            display: none;
+        }
+    </style>
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 40vh;"></div>
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav><a href="{% url 'home' %}">← BACK TO HOME</a></nav>
+        </header>
+
+        <div class="auth-container">
+            <h2 style="color: #2c3e50; margin-bottom: 10px; text-align: center;">Welcome Back</h2>
+            <p style="color: #7f8c8d; text-align: center; margin-bottom: 30px;">Log in to access your prescriptions and orders.</p>
+
+            {% if error %}
+                <div class="error-box"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <label style="font-weight: 600; color: #2c3e50;">Username</label>
+                {{ form.username }}
+
+                <label style="font-weight: 600; color: #2c3e50;">Password</label>
+                {{ form.password }}
+
+                <button type="submit" class="btn-search" style="width: 100%; border-radius: 10px; padding: 15px; font-size: 18px; margin-top: 10px;">Secure Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 25px; font-size: 14px; color: #7f8c8d;">
+                Don't have an account? <a href="{% url 'register' %}" style="color: var(--primary-teal); font-weight: bold; text-decoration: none;">Sign up here</a>
+            </p>
+        </div>
+    </div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Django automatically gives the login password field the id 'id_password'
+            const pwdInput = document.getElementById('id_password');
+
+            if (pwdInput) {
+                // Create a protective wrapper around the input
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.marginTop = '5px';
+                wrapper.style.marginBottom = '20px';
+
+                // Remove margins from the input itself so the wrapper handles the spacing
+                pwdInput.style.marginTop = '0';
+                pwdInput.style.marginBottom = '0';
+
+                // Wrap the input inside the div
+                pwdInput.parentNode.insertBefore(wrapper, pwdInput);
+                wrapper.appendChild(pwdInput);
+
+                // Create our custom FontAwesome eye icon
+                const eyeIcon = document.createElement('i');
+                eyeIcon.className = 'fas fa-eye';
+                eyeIcon.style.position = 'absolute';
+                eyeIcon.style.right = '15px';
+                eyeIcon.style.top = '50%';
+                eyeIcon.style.transform = 'translateY(-50%)';
+                eyeIcon.style.cursor = 'pointer';
+                eyeIcon.style.color = '#7f8c8d';
+                eyeIcon.style.fontSize = '16px';
+                eyeIcon.style.zIndex = '10';
+
+                wrapper.appendChild(eyeIcon);
+
+                // Add the click magic to show/hide the password
+                eyeIcon.addEventListener('click', function() {
+                    if (pwdInput.type === 'password') {
+                        pwdInput.type = 'text';
+                        eyeIcon.className = 'fas fa-eye-slash';
+                        eyeIcon.style.color = '#2c3e50'; // Make it dark when visible
+                    } else {
+                        pwdInput.type = 'password';
+                        eyeIcon.className = 'fas fa-eye';
+                        eyeIcon.style.color = '#7f8c8d'; // Make it grey when hidden
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

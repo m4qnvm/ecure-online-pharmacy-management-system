@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .cart-container { max-width: 1000px; margin: 60px auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .cart-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        .cart-table th { text-align: left; padding-bottom: 15px; border-bottom: 2px solid #e0f2f0; color: #2c3e50; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
+        .cart-table td { padding: 25px 0; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        .item-info { display: flex; align-items: center; gap: 20px; }
+        .item-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: #f4fcfb; display: flex; justify-content: center; align-items: center; color: var(--primary-teal); font-size: 30px; }
+        .cart-summary { background: #f4fcfb; padding: 30px; border-radius: 15px; text-align: right; border: 1px solid #e0f2f0; }
+        .cart-total { font-size: 28px; font-weight: bold; color: var(--primary-teal); margin: 15px 0 25px 0; }
+        .empty-cart { text-align: center; padding: 60px 20px; color: #7f8c8d; }
+    </style>
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 35vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav><a href="{% url 'home' %}">← CONTINUE SHOPPING</a></nav>
+        </header>
+
+        <div class="cart-container">
+            <h2 style="color: #2c3e50; margin-bottom: 30px;"><i class="fas fa-shopping-basket" style="color: var(--primary-teal);"></i> Your Shopping Cart</h2>
+
+            {% if not cart_items %}
+                <div class="empty-cart">
+                    <i class="fas fa-cart-arrow-down" style="font-size: 70px; color: #d1e8e5; margin-bottom: 25px;"></i>
+                    <h3 style="color: #2c3e50; font-size: 24px; margin-bottom: 10px;">Your cart is empty</h3>
+                    <p>Looks like you haven't added any medicines to your cart yet.</p>
+                    <a href="{% url 'home' %}" class="btn-search" style="display: inline-block; margin-top: 25px; text-decoration: none;">Browse Medicines</a>
+                </div>
+            {% else %}
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>
+                                <div class="item-info">
+                                    <div class="item-img">
+                                        {% if item.medicine.image %}
+                                            <img src="{{ item.medicine.image.url }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
+                                        {% else %}
+                                            <i class="fas fa-pills"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h3 style="color: #2c3e50; margin-bottom: 5px; font-size: 18px;">{{ item.medicine.name }}</h3>
+                                        <p style="color: var(--text-gray); font-size: 14px; margin: 0;">{{ item.medicine.category }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="font-weight: 600; color: #34495e;">${{ item.medicine.price }}</td>
+                            <td>
+                                <form action="{% url 'update_quantity' item.id 'set' %}" method="POST" style="display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 5px; border-radius: 8px; width: fit-content; margin: 0;">
+                                    {% csrf_token %}
+
+                                    <a href="{% url 'update_quantity' item.id 'decrease' %}" style="width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; background: white; color: #e74c3c; border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s;">
+                                        <i class="fas fa-minus" style="font-size: 12px;"></i>
+                                    </a>
+
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="99" onchange="this.form.submit()" style="width: 40px; height: 30px; border: 1px solid #e0e0e0; border-radius: 6px; text-align: center; font-weight: bold; color: #2c3e50; outline: none; background: white; font-family: inherit;">
+
+                                    <a href="{% url 'update_quantity' item.id 'increase' %}" style="width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; background: white; color: var(--primary-teal); border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s;">
+                                        <i class="fas fa-plus" style="font-size: 12px;"></i>
+                                    </a>
+
+                                </form>
+                            </td>
+                            <td style="font-weight: bold; color: var(--primary-teal); font-size: 18px;">${{ item.sub_total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="cart-summary">
+                    <p style="color: #7f8c8d; font-size: 16px; margin: 0;">Estimated Total</p>
+                    <div class="cart-total">${{ total|floatformat:2 }}</div>
+                    <a href="{% url 'checkout' %}" class="btn-search" style="display: inline-block; text-align: center; text-decoration: none; width: 100%; max-width: 300px; padding: 18px; border-radius: 12px; font-size: 18px; box-sizing: border-box;">Proceed to Checkout</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

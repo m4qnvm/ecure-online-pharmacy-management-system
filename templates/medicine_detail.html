@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ medicine.name }} - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .product-container { max-width: 1000px; margin: 60px auto; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; overflow: hidden; }
+        .product-image-side { flex: 1; background: #f4fcfb; display: flex; justify-content: center; align-items: center; min-height: 400px; }
+        .product-info-side { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
+        .category-badge { display: inline-block; background: #e8f4f3; color: var(--primary-teal); padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; }
+        .product-title { color: #2c3e50; font-size: 32px; margin-bottom: 15px; }
+        .product-price { color: var(--primary-teal); font-size: 28px; font-weight: bold; margin-bottom: 25px; }
+        .product-desc { color: #7f8c8d; line-height: 1.8; font-size: 16px; margin-bottom: 35px; }
+    </style>
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 35vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav style="display: flex; align-items: center; gap: 20px;">
+                <a href="{% url 'cart' %}" style="background: white; color: var(--primary-teal); padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <i class="fas fa-shopping-cart"></i> View Cart
+                </a>
+
+                <a href="{% url 'home' %}#trending-section">← BACK TO HOME</a>
+            </nav>
+        </header>
+
+        <div class="product-container">
+            <div class="product-image-side">
+                {% if medicine.image %}
+                    <img src="{{ medicine.image.url }}" alt="{{ medicine.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    <i class="fas fa-pills" style="font-size: 100px; color: #d1e8e5;"></i>
+                {% endif %}
+            </div>
+
+            <div class="product-info-side">
+                <div>
+                    <span class="category-badge">{{ medicine.category }}</span>
+                    <h1 class="product-title">{{ medicine.name }}</h1>
+
+                    <div style="color: #f1c40f; margin-bottom: 15px; font-size: 14px;">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        <span style="color: #7f8c8d; margin-left: 5px;">(4.8/5 Reviews)</span>
+                    </div>
+
+                    <div class="product-price">${{ medicine.price }}</div>
+
+                    <p class="product-desc">
+                        {% if medicine.description %}
+                            {{ medicine.description }}
+                        {% else %}
+                            A premium healthcare product carefully selected by our pharmacists. High-quality ingredients ensuring the best results for your health and wellness.
+                        {% endif %}
+                    </p>
+
+                    <div style="margin-top: 10px;">
+                        {% if medicine.in_cart %}
+                            <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 10px; font-weight: 600;"><i class="fas fa-check-circle" style="color: var(--primary-teal);"></i> In your cart</p>
+
+                            <form action="{% url 'update_quantity' medicine.cart_item_id 'set' %}" method="POST" style="display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 6px; border-radius: 10px; width: fit-content; margin: 0; border: 1px solid #eee;">
+                                {% csrf_token %}
+
+                                <a href="{% url 'update_quantity' medicine.cart_item_id 'decrease' %}" style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background: white; color: #e74c3c; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s;">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+
+                                <input type="number" name="quantity" value="{{ medicine.cart_quantity }}" min="0" max="99" onchange="this.form.submit()" style="width: 50px; height: 40px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: center; font-weight: bold; color: #2c3e50; outline: none; background: white; font-family: inherit; font-size: 16px;">
+
+                                <a href="{% url 'update_quantity' medicine.cart_item_id 'increase' %}" style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background: white; color: var(--primary-teal); border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s;">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+
+                            </form>
+                        {% else %}
+                            <form action="{% url 'add_to_cart' medicine.id %}" method="POST" style="display: flex; align-items: center; gap: 15px; margin: 0;">
+                                {% csrf_token %}
+
+                                <input type="number" name="quantity" value="1" min="1" max="99" style="width: 70px; height: 50px; border: 1px solid #e0e0e0; border-radius: 10px; text-align: center; font-weight: bold; color: #2c3e50; outline: none; background: #f8f9fa; font-family: inherit; font-size: 18px;">
+
+                                <button type="submit" class="btn-search" style="padding: 0 35px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0; box-shadow: 0 5px 15px rgba(32, 178, 170, 0.3); border: none; cursor: pointer;">
+                                    <i class="fas fa-cart-plus" style="margin-right: 8px;"></i> Add to Cart
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

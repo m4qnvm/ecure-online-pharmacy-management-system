@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 30vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav style="display: flex; align-items: center; gap: 20px;">
+                <a href="{% url 'cart' %}" style="background: white; color: var(--primary-teal); padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <i class="fas fa-shopping-cart"></i> View Cart
+                </a>
+
+                <a href="{% url 'home' %}">← BACK TO HOME</a>
+            </nav>
+        </header>
+
+        <form action="{% url 'search' %}" method="GET" class="search-bar" style="margin-top: 40px; margin-bottom: 30px;">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" name="q" value="{{ query }}" placeholder="Search for medicines, categories, or brands..." required>
+            <button type="submit" class="btn-search" style="padding: 10px 30px;">Search</button>
+        </form>
+
+        <div style="margin-top: 40px; margin-bottom: 20px;">
+            <h2 style="color: #2c3e50;">Search Results for "{{ query }}"</h2>
+            <p style="color: #7f8c8d;">Found {{ results|length }} items.</p>
+        </div>
+
+        <div class="product-grid">
+            {% for medicine in results %}
+                <div class="product-card">
+
+                    <a href="{% url 'medicine_detail' medicine.id %}" style="display: block; text-decoration: none; color: inherit;">
+                        <div class="product-image-box" style="padding: 0; overflow: hidden;">
+                            {% if medicine.image %}
+                                <img src="{{ medicine.image.url }}" alt="{{ medicine.name }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            {% else %}
+                                <i class="fas fa-prescription-bottle-alt"></i>
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    <div class="product-details">
+
+                        <a href="{% url 'medicine_detail' medicine.id %}" style="text-decoration: none; color: inherit;">
+                            <h3 style="transition: color 0.3s;" onmouseover="this.style.color='var(--primary-teal)'" onmouseout="this.style.color='#2c3e50'">
+                                {{ medicine.name }}
+                            </h3>
+                        </a>
+
+                        <p class="product-subtitle">{{ medicine.category }}</p>
+
+                        <div class="product-bottom">
+                            <span class="price">${{ medicine.price }}</span>
+
+                            <form action="{% url 'add_to_cart' medicine.id %}" method="POST" style="display: flex; align-items: center; gap: 8px; margin: 0;">
+                                {% csrf_token %}
+
+                                <input type="number" name="quantity" value="1" min="1" max="99" style="width: 50px; height: 35px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: center; font-weight: bold; color: #2c3e50; outline: none; background: #f8f9fa; font-family: inherit;">
+
+                                <button type="submit" class="add-to-cart" title="Add to Cart" style="width: 35px; height: 35px; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0;">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div style="grid-column: 1 / -1; background: white; padding: 60px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                    <i class="fas fa-search-minus" style="font-size: 60px; color: #d1e8e5; margin-bottom: 20px;"></i>
+                    <h3 style="color: #2c3e50; margin-bottom: 10px;">No medicines found</h3>
+                    <p style="color: #7f8c8d;">We couldn't find anything matching "{{ query }}". Try searching for a different category or brand.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+<script>
+        // 1. When the page loads, check if we saved a scroll position
+        document.addEventListener("DOMContentLoaded", function() {
+            let scrollPos = sessionStorage.getItem('scrollPosition');
+            if (scrollPos) {
+                // Instantly jump back to where they were!
+                window.scrollTo(0, parseInt(scrollPos));
+                // Clear the memory so it doesn't mess up future normal navigation
+                sessionStorage.removeItem('scrollPosition');
+            }
+        });
+
+        // 2. Right before the page reloads (like when submitting the cart form), save the exact position
+        window.addEventListener("beforeunload", function() {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        });
+    </script>
+</body>
+</body>
+</html>

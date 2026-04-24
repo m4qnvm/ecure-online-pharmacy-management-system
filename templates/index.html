@@ -1,0 +1,458 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCure - Digital Pharmacy</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            /* Pushed down slightly less because the new header is slimmer */
+            padding-top: 75px !important;
+        }
+
+        header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 100% !important;
+            max-width: 1100px !important;
+            z-index: 9999 !important;
+
+            /* 1. THE GLASS COLOR: Dropped opacity from 0.95 (solid) to 0.55 (very see-through) */
+            background: rgba(27, 104, 115, 0.55) !important;
+
+            /* 2. THE BLUR: Cranked up to 20px so the content behind it melts into a beautiful blur */
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important; /* Ensures it works perfectly on Safari/iPhones! */
+
+            /* 3. THE SLIM DOWN: Reduced padding to fix the "chunky" look */
+            padding: 12px 25px !important;
+
+            border-radius: 0 0 16px 16px !important;
+            box-sizing: border-box !important;
+
+            /* Adds a microscopic white highlight to the edges of the glass to make it pop */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-background"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-prescription-bottle-medical"></i> eCure
+            </div>
+            <nav>
+                <a href="{% url 'home' %}">HOME</a>
+                <a href="{% url 'upload_prescription' %}">UPLOAD PRESCRIPTION</a>
+                <a href="{% url 'cart' %}">CART <i class="fas fa-shopping-cart"></i></a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'my_orders' %}" style="color: #d1e8e5;" title="View My Orders">HELLO, {{ user.username|upper }}! <i class="fas fa-user-circle"></i></a>
+                    <a href="{% url 'logout' %}">LOGOUT</a>
+                {% else %}
+                    <a href="{% url 'login' %}">LOGIN / REGISTER</a>
+                {% endif %}
+            </nav>
+            <div class="user-profile">
+                <a href="{% url 'dashboard' %}"><i class="fas fa-user"></i></a>
+            </div>
+        </header>
+
+        <main>
+            <div class="hero">
+                <h1>Simplify. Care. Connect.</h1>
+                <p>Your one-stop digital pharmacy for a healthier tomorrow.</p>
+
+                <form action="{% url 'search' %}" method="GET" class="search-box" style="display: flex; align-items: center; max-width: 800px; width: 100%; margin: 40px auto 0 auto; background: white; border-radius: 50px; padding: 6px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+
+                <input type="text" name="q" placeholder="Search for medicines, categories, or brands..." required style="flex: 1; padding: 15px 25px; border: none; font-size: 16px; outline: none; background: transparent; color: #2c3e50;">
+
+                <button type="submit" class="btn-search" style="border-radius: 50px; padding: 12px 35px; font-size: 16px; font-weight: bold;">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+
+            <div class="brands-section">
+    <p class="brands-title">Trusted by top pharmaceutical brands worldwide</p>
+    <div class="marquee-container">
+        <div class="marquee-track">
+            <a href="{% url 'brand' 'PharmaCorp' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-pills"></i> PharmaCorp</div>
+            </a>
+
+            <a href="{% url 'brand' 'NatureWell' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-leaf"></i> NatureWell</div>
+            </a>
+
+            <a href="{% url 'brand' 'BioGenetics' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-dna"></i> BioGenetics</div>
+            </a>
+
+            <a href="{% url 'brand' 'MediLife' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-vial"></i> MediLife</div>
+            </a>
+
+            <a href="{% url 'brand' 'HealthCross' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-plus-square"></i> HealthCross</div>
+            </a>
+
+            <a href="{% url 'brand' 'CardioCare' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-heartbeat"></i> CardioCare</div>
+            </a>
+
+            <a href="{% url 'brand' 'PharmaCorp' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-pills"></i> PharmaCorp</div>
+            </a>
+
+            <a href="{% url 'brand' 'NatureWell' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-leaf"></i> NatureWell</div>
+            </a>
+
+            <a href="{% url 'brand' 'BioGenetics' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-dna"></i> BioGenetics</div>
+            </a>
+
+            <a href="{% url 'brand' 'MediLife' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-vial"></i> MediLife</div>
+            </a>
+
+            <a href="{% url 'brand' 'HealthCross' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-plus-square"></i> HealthCross</div>
+            </a>
+
+            <a href="{% url 'brand' 'CardioCare' %}" style="text-decoration: none; color: inherit;">
+                <div class="brand-item"><i class="fas fa-heartbeat"></i> CardioCare</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+            <div id="category-section" class="section-header">
+                <h2>Shop by Category</h2>
+                <p>Explore our comprehensive range of healthcare products</p>
+            </div>
+
+            <div class="category-grid">
+    <a href="{% url 'category' 'Baby Care' %}" style="text-decoration: none; color: inherit;">
+        <div class="category-item">
+            <div class="cat-icon"><i class="fas fa-baby"></i></div>
+            <span>Baby Care</span>
+        </div>
+    </a>
+
+    <a href="{% url 'category' 'Heart Health' %}" style="text-decoration: none; color: inherit;">
+        <div class="category-item">
+            <div class="cat-icon"><i class="fas fa-heartbeat"></i></div>
+            <span>Heart Health</span>
+        </div>
+    </a>
+
+    <a href="{% url 'category' 'Skin Care' %}" style="text-decoration: none; color: inherit;">
+        <div class="category-item">
+            <div class="cat-icon"><i class="fas fa-spa"></i></div>
+            <span>Skin Care</span>
+        </div>
+    </a>
+
+    <a href="{% url 'category' 'Diet & Nutrition' %}" style="text-decoration: none; color: inherit;">
+        <div class="category-item">
+            <div class="cat-icon"><i class="fas fa-apple-alt"></i></div>
+            <span>Diet & Nutrition</span>
+        </div>
+    </a>
+
+    <a href="{% url 'category' 'First Aid' %}" style="text-decoration: none; color: inherit;">
+        <div class="category-item">
+            <div class="cat-icon"><i class="fas fa-first-aid"></i></div>
+            <span>First Aid</span>
+        </div>
+    </a>
+
+    <a href="{% url 'category' 'Joint Pain' %}" style="text-decoration: none; color: inherit;">
+        <div class="category-item">
+            <div class="cat-icon"><i class="fas fa-bone"></i></div>
+            <span>Joint Pain</span>
+        </div>
+    </a>
+</div>
+
+            <div id="trending-section" class="section-header" style="margin-top: 80px;">
+                <h2>Trending Products</h2>
+                <p>Our most popular health and wellness essentials</p>
+            </div>
+
+            <div class="product-grid">
+                {% for medicine in trending_medicines %}
+
+                <div class="product-card">
+                    <a href="{% url 'medicine_detail' medicine.id %}" style="text-decoration: none; color: inherit;">
+                        <div class="product-image-box" style="padding: 0; overflow: hidden;">
+                            {% if medicine.image %}
+                                <img src="{{ medicine.image.url }}" alt="{{ medicine.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <i class="fas fa-prescription-bottle-alt"></i>
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    <div class="product-details">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        </div>
+
+                        <a href="{% url 'medicine_detail' medicine.id %}" style="text-decoration: none; color: inherit;">
+                            <h3 style="transition: color 0.3s;" onmouseover="this.style.color='var(--primary-teal)'" onmouseout="this.style.color='#2c3e50'">{{ medicine.name }}</h3>
+                        </a>
+
+                        <p class="product-subtitle">{{ medicine.category }}</p>
+
+                        <div class="product-bottom">
+                            <span class="price">${{ medicine.price }}</span>
+
+                            <form action="{% url 'add_to_cart' medicine.id %}" method="POST" style="display: flex; align-items: center; gap: 8px; margin: 0;">
+                                {% csrf_token %}
+
+                                <input type="number" name="quantity" value="1" min="1" max="99" style="width: 50px; height: 35px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: center; font-weight: bold; color: #2c3e50; outline: none; background: #f8f9fa; font-family: inherit;">
+
+                                <button type="submit" class="add-to-cart" title="Add to Cart" style="width: 35px; height: 35px; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0;">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+                <div style="grid-column: 1 / -1; text-align: center; color: var(--text-gray); padding: 40px;">
+                    <p>No trending products available right now. Check back soon!</p>
+                </div>
+
+                {% endfor %}
+            </div>
+
+            <div id="articles-section" class="section-header" style="margin-top: 80px;">
+    <h2>Health & Wellness Hub</h2>
+    <p>Expert advice, lifestyle tips, and medical news</p>
+</div>
+
+<div class="articles-grid">
+    {% for article in latest_articles %}
+    <div class="article-card">
+        <div class="article-img" style="{% if article.image %}background-image: url('{{ article.image.url }}'); background-size: cover; background-position: center; min-height: 200px;{% else %}background-color: #e8f4f3; min-height: 200px; display: flex; justify-content: center; align-items: center;{% endif %}">
+
+            <span class="article-tag">Health News</span>
+
+            {% if not article.image %}
+                <i class="fas fa-newspaper" style="font-size: 50px; color: var(--primary-teal);"></i>
+            {% endif %}
+        </div>
+
+        <div class="article-content">
+            <span class="article-date">{{ article.published_date|date:"M d, Y" }}</span>
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.summary }}</p>
+
+            <a href="{% url 'article_detail' article.id %}" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+    {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+            <p style="color: #7f8c8d; font-size: 18px;">Expert health articles coming soon!</p>
+        </div>
+    {% endfor %}
+</div>
+                <div style="text-align: center; margin-top: 40px;">
+    <a href="{% url 'all_articles' %}" class="btn-search" style="text-decoration: none; padding: 15px 40px; border-radius: 50px; font-size: 16px; font-weight: bold; display: inline-block;">
+        View All Articles <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+    </a>
+</div>
+
+
+
+            <div class="features-container">
+                <div class="feature-card">
+                    <i class="fas fa-truck feature-icon"></i>
+                    <div class="feature-text">
+                        <h3>Fast Delivery</h3>
+                        <p>Essential medicines delivered safely and securely to your doorstep.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <div class="feature-text">
+                        <h3>100% Genuine</h3>
+                        <p>All products are authentic and sourced from verified manufacturers.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <i class="fas fa-user-md feature-icon"></i>
+                    <div class="feature-text">
+                        <h3>Expert Support</h3>
+                        <p>Our certified team of pharmacists is available for health queries.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<footer>
+        <div class="footer-content container">
+            <div class="footer-col brand-col">
+                <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+                <p>Your trusted digital pharmacy. We bring health and wellness directly to your home with uncompromising quality and care.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="{% url 'about' %}">About Us</a>
+                <a href="{% url 'upload_prescription' %}">Upload Prescription</a>
+
+                <a href="#">Contact Support</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Return Policy</a>
+                <a href="#">Shipping Info</a>
+            </div>
+
+            <div class="footer-col newsletter-col">
+                <h4>Stay Healthy</h4>
+                <p>Subscribe to our newsletter for health tips and exclusive offers.</p>
+                <div class="newsletter-box">
+                    <input type="email" placeholder="Your email address">
+                    <button><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 eCure Digital Pharmacy. All rights reserved.</p>
+        </div>
+    </footer>
+
+<script>
+        // 1. When the page loads, check if we saved a scroll position
+        document.addEventListener("DOMContentLoaded", function() {
+            let scrollPos = sessionStorage.getItem('scrollPosition');
+            if (scrollPos) {
+                // Instantly jump back to where they were!
+                window.scrollTo(0, parseInt(scrollPos));
+                // Clear the memory so it doesn't mess up future normal navigation
+                sessionStorage.removeItem('scrollPosition');
+            }
+        });
+
+        // 2. Right before the page reloads (like when submitting the cart form), save the exact position
+        window.addEventListener("beforeunload", function() {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        });
+    </script>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const marquee = document.querySelector('.marquee-container');
+            const track = document.querySelector('.marquee-track');
+
+            // Duplicate the track's content so it can seamlessly loop!
+            track.innerHTML += track.innerHTML;
+
+            let isPaused = false;
+            let scrollSpeed = 0.15;
+
+            // NEW: The exact decimal tracker!
+            let exactScrollLeft = marquee.scrollLeft;
+
+            function autoScroll() {
+                if (!isPaused) {
+                    // Add the decimal to our hidden tracker
+                    exactScrollLeft += scrollSpeed;
+                    // Tell the browser to scroll to whatever the current whole number is
+                    marquee.scrollLeft = exactScrollLeft;
+
+                    // Auto-snapping when moving naturally to the left
+                    if (marquee.scrollLeft >= track.scrollWidth / 2) {
+                        marquee.scrollLeft = 0;
+                        exactScrollLeft = 0; // Reset tracker too!
+                    }
+                }
+                requestAnimationFrame(autoScroll);
+            }
+            autoScroll();
+
+            // DESKTOP CLICK-AND-DRAG LOGIC
+            let isDown = false;
+            let startX;
+            let scrollLeftPos;
+
+            marquee.style.cursor = 'grab';
+
+            marquee.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isPaused = true;
+                marquee.style.cursor = 'grabbing';
+                startX = e.pageX - marquee.offsetLeft;
+                scrollLeftPos = marquee.scrollLeft;
+            });
+
+            marquee.addEventListener('mouseleave', () => {
+                isDown = false;
+                isPaused = false;
+                marquee.style.cursor = 'grab';
+                exactScrollLeft = marquee.scrollLeft; // Sync tracker
+            });
+
+            marquee.addEventListener('mouseup', () => {
+                isDown = false;
+                isPaused = false;
+                marquee.style.cursor = 'grab';
+                exactScrollLeft = marquee.scrollLeft; // Sync tracker
+            });
+
+            marquee.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - marquee.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                marquee.scrollLeft = scrollLeftPos - walk;
+
+                // --- THE REVERSE SNAP! ---
+                if (marquee.scrollLeft <= 0) {
+                    marquee.scrollLeft = track.scrollWidth / 2;
+                    scrollLeftPos = marquee.scrollLeft;
+                    startX = x;
+                }
+                else if (marquee.scrollLeft >= track.scrollWidth / 2) {
+                    marquee.scrollLeft = 0;
+                    scrollLeftPos = marquee.scrollLeft;
+                    startX = x;
+                }
+
+                exactScrollLeft = marquee.scrollLeft; // Sync tracker while dragging
+            });
+
+            // Touch support for mobile
+            marquee.addEventListener('touchstart', () => isPaused = true);
+            marquee.addEventListener('touchend', () => {
+                exactScrollLeft = marquee.scrollLeft; // Sync tracker after touching
+                setTimeout(() => { isPaused = false; }, 1000);
+            });
+        });
+    </script>
+
+</body>
+</html>

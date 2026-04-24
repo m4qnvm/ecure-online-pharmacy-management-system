@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Prescription - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Quick form styles */
+        .upload-container { max-width: 600px; margin: 80px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .form-input { width: 100%; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 15px; margin-top: 5px; outline: none; transition: border 0.3s; }
+        .form-input:focus { border-color: var(--primary-teal); }
+        .file-input { background: #f4fcfb; padding: 10px; cursor: pointer; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { font-weight: 600; color: #2c3e50; }
+        .success-box { background: #d4edda; color: #155724; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 40vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav><a href="{% url 'home' %}">← BACK TO HOME</a></nav>
+        </header>
+
+        <div class="upload-container">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <i class="fas fa-file-prescription" style="font-size: 50px; color: var(--primary-teal); margin-bottom: 15px;"></i>
+
+
+            </div>
+
+            {% if success %}
+                <div class="success-box">
+                    <h3><i class="fas fa-check-circle"></i> Upload Successful!</h3>
+                    <p>Our pharmacists are reviewing your prescription. You will receive an SMS/Email with your invoice shortly.</p>
+                    <a href="{% url 'home' %}" class="btn-search" style="display: inline-block; margin-top: 15px; text-decoration: none;">Return Home</a>
+                </div>
+            {% else %}
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div style="color: #e74c3c; font-size: 13px; margin-top: 5px;">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn-search" style="width: 100%; margin-top: 10px; border-radius: 10px;">Submit Securely</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

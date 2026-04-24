@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Success - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 100vh;"></div>
+
+    <div class="container" style="display: flex; justify-content: center; align-items: center; height: 90vh;">
+        <div style="background: white; padding: 60px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px;">
+            <i class="fas fa-check-circle" style="font-size: 80px; color: #2ecc71; margin-bottom: 20px;"></i>
+            <h1 style="color: #2c3e50; margin-bottom: 15px;">Order Placed!</h1>
+            <p style="color: #7f8c8d; line-height: 1.6; margin-bottom: 30px;">Thank you for your purchase. We have received your order and are currently processing it. You will receive an SMS shortly with delivery updates.</p>
+            <a href="{% url 'home' %}" class="btn-search" style="text-decoration: none; display: inline-block;">Return to Home</a>
+        </div>
+    </div>
+</body>
+</html>

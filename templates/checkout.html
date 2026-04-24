@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .checkout-layout { display: flex; gap: 40px; max-width: 1100px; margin: 60px auto; align-items: flex-start;}
+        .checkout-form { flex: 1.5; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .order-summary { flex: 1; background: #f4fcfb; padding: 30px; border-radius: 20px; border: 1px solid #e0f2f0; position: sticky; top: 20px; }
+        .form-input { width: 100%; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 15px; margin-top: 5px; outline: none; margin-bottom: 20px;}
+        .form-input:focus { border-color: var(--primary-teal); }
+        .summary-item { display: flex; justify-content: space-between; border-bottom: 1px solid #e0f2f0; padding: 15px 0; font-size: 15px; color: #2c3e50;}
+        .summary-total { display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; color: var(--primary-teal); margin-top: 20px; }
+    </style>
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 35vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav><a href="{% url 'cart' %}">← BACK TO CART</a></nav>
+        </header>
+
+        <div class="checkout-layout">
+            <div class="checkout-form">
+                <h2 style="color: #2c3e50; margin-bottom: 30px;"><i class="fas fa-shipping-fast"></i> Shipping Details</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <label style="font-weight: 600; color: #2c3e50;">{{ field.label }}</label>
+                        {{ field }}
+                    {% endfor %}
+                    <button type="submit" class="btn-search" style="width: 100%; border-radius: 10px; padding: 18px; font-size: 18px; margin-top: 10px;">Place Order Securely</button>
+                </form>
+            </div>
+
+            <div class="order-summary">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">Order Summary</h3>
+                {% for item in cart_items %}
+                    <div class="summary-item">
+                        <span>{{ item.quantity }}x {{ item.medicine.name }}</span>
+                        <span>${{ item.sub_total }}</span>
+                    </div>
+                {% endfor %}
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span>${{ total|floatformat:2 }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

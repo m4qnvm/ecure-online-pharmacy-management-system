@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health & Wellness Hub - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 30vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav><a href="{% url 'home' %}#articles-section">← BACK TO ARTICLES</a></nav>
+        </header>
+
+        <div class="section-header" style="margin-top: 60px;">
+            <h2>Health & Wellness Hub</h2>
+            <p>Browse all our expert advice, lifestyle tips, and medical news.</p>
+        </div>
+
+        <div class="articles-grid">
+            {% for article in articles %}
+            <div class="article-card">
+                <div class="article-img" style="{% if article.image %}background-image: url('{{ article.image.url }}'); background-size: cover; background-position: center; min-height: 200px;{% else %}background-color: #e8f4f3; min-height: 200px; display: flex; justify-content: center; align-items: center;{% endif %}">
+                    <span class="article-tag">Health News</span>
+                    {% if not article.image %}
+                        <i class="fas fa-newspaper" style="font-size: 50px; color: var(--primary-teal);"></i>
+                    {% endif %}
+                </div>
+
+                <div class="article-content">
+                    <span class="article-date">{{ article.published_date|date:"M d, Y" }}</span>
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.summary }}</p>
+                    <a href="{% url 'article_detail' article.id %}" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

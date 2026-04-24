@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container { max-width: 900px; margin: 60px auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .order-card { border: 1px solid #e0f2f0; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .order-header { display: flex; justify-content: space-between; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 15px; font-size: 14px; color: #7f8c8d; }
+        .order-status { font-weight: bold; padding: 5px 12px; border-radius: 20px; font-size: 12px; text-transform: uppercase; }
+        .status-Pending { background: #fff3cd; color: #856404; }
+        .status-Processing { background: #cce5ff; color: #004085; }
+        .status-Shipped { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 35vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav><a href="{% url 'home' %}">← BACK TO HOME</a></nav>
+        </header>
+
+        <div class="dashboard-container">
+            <h2 style="color: #2c3e50; margin-bottom: 30px;"><i class="fas fa-box-open" style="color: var(--primary-teal);"></i> My Order History</h2>
+
+            {% if not orders %}
+                <p style="color: #7f8c8d; text-align: center; padding: 40px;">You haven't placed any orders yet.</p>
+            {% else %}
+                {% for order in orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div><strong>Order #{{ order.id }}</strong> • Placed on {{ order.created_at|date:"M d, Y" }}</div>
+                            <div class="order-status status-{{ order.status }}">{{ order.status }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="color: #2c3e50; margin-bottom: 5px; font-weight: 600;">Items:</p>
+                                <ul style="color: #7f8c8d; font-size: 14px; padding-left: 20px;">
+                                    {% for item in order.items.all %}
+                                        <li>{{ item.quantity }}x {{ item.medicine.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="color: #7f8c8d; font-size: 13px; margin-bottom: 5px;">Total Amount</p>
+                                <p style="font-size: 20px; font-weight: bold; color: var(--primary-teal);">${{ order.total_amount }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

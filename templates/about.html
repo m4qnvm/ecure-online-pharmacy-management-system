@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - eCure Digital Pharmacy</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { padding-top: 75px !important; }
+
+        header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 100% !important;
+            max-width: 1100px !important;
+            z-index: 9999 !important;
+            background: rgba(27, 104, 115, 0.55) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            padding: 12px 25px !important;
+            border-radius: 0 0 16px 16px !important;
+            box-sizing: border-box !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Unique About Page Styles */
+        .about-hero {
+            text-align: center;
+            padding: 80px 20px 40px;
+            color: #2c3e50;
+        }
+        .about-hero h1 { font-size: 48px; margin-bottom: 15px; color: var(--primary-teal); }
+        .about-hero p { font-size: 18px; color: var(--text-gray); max-width: 700px; margin: 0 auto; line-height: 1.6; }
+
+        .mission-vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0 80px;
+        }
+
+        .stat-banner {
+            background: linear-gradient(135deg, #1b6873 0%, #47a6a4 100%);
+            border-radius: 24px;
+            padding: 50px;
+            display: flex;
+            justify-content: space-around;
+            color: white;
+            text-align: center;
+            margin-bottom: 80px;
+            box-shadow: 0 15px 30px rgba(27, 104, 115, 0.2);
+        }
+
+        .stat-item h3 { font-size: 40px; margin-bottom: 5px; }
+        .stat-item p { font-size: 14px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div class="top-background" style="height: 40vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav style="display: flex; align-items: center; gap: 20px;">
+                <a href="{% url 'cart' %}" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: background 0.3s;">
+                    <i class="fas fa-shopping-cart"></i> View Cart
+                </a>
+                <a href="{% url 'home' %}">← BACK TO HOME</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="about-hero">
+                <h1>Redefining Healthcare</h1>
+                <p>At eCure, we believe that accessing essential medicines and expert health advice should be as simple, safe, and seamless as possible.</p>
+            </div>
+
+            <div class="mission-vision-grid">
+                <div class="modern-card">
+                    <div class="icon-box icon-teal"><i class="fas fa-bullseye"></i></div>
+                    <h2>Our Mission</h2>
+                    <p>To digitize and democratize pharmacy services, ensuring that no matter where you are, high-quality healthcare and genuine medications are just a click away.</p>
+                </div>
+
+                <div class="modern-card">
+                    <div class="icon-box icon-blue"><i class="fas fa-shield-heart"></i></div>
+                    <h2>Uncompromising Quality</h2>
+                    <p>Every product in our inventory is sourced directly from verified, trusted pharmaceutical manufacturers. Your safety is our absolute highest priority.</p>
+                </div>
+            </div>
+
+            <div class="stat-banner">
+                <div class="stat-item">
+                    <h3>10k+</h3>
+                    <p>Orders Delivered</p>
+                </div>
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Trusted Brands</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Expert Support</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

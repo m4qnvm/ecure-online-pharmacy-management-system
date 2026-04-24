@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account - eCure</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <style>
+        .auth-container { max-width: 500px; margin: 80px auto; background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+
+        /* Targets Django's automated form inputs */
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 15px; outline: none; transition: border 0.3s; margin-top: 5px; margin-bottom: 10px; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--primary-teal); }
+
+        /* Styles Django's automated labels */
+        .auth-container p label { font-weight: 600; color: #2c3e50; }
+        .auth-container p { margin-bottom: 5px; }
+
+        /* THE FIX: The Rules (Helptext) Box - No negative margins! */
+        /* THE FIX: The Rules (Helptext) Box - Plain Text Version */
+        .helptext {
+            display: none;
+        }
+
+        /* THE FIX: The Error Box - No negative margins! */
+        ul.errorlist {
+            background-color: #fef0f0;
+            color: #c0392b;
+            border-left: 5px solid #e74c3c;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            list-style-type: none;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.1);
+        }
+        ul.errorlist li { margin-bottom: 5px; }
+        ul.errorlist li:last-child { margin-bottom: 0; }
+
+
+        .helptext, .auth-container form ul:not(.errorlist):not(#js-rules) {
+            display: none !important;
+        }
+
+        /* THE FIX: Hide the browser's native disappearing eye icon */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-webkit-reveal {
+            display: none;
+        }
+    </style>
+</head>
+<body style="background: var(--light-teal-bg);">
+    <div class="top-background" style="height: 40vh;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-prescription-bottle-medical"></i> eCure</div>
+            <nav><a href="{% url 'home' %}">← BACK TO HOME</a></nav>
+        </header>
+
+        <div class="auth-container">
+            <h2 style="color: #2c3e50; margin-bottom: 10px; text-align: center;">Join eCure</h2>
+            <p style="color: #7f8c8d; text-align: center; margin-bottom: 30px;">Create an account for faster checkouts.</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-search" style="width: 100%; border-radius: 10px; padding: 15px; font-size: 18px; margin-top: 10px;">Create Account</button>
+            </form>
+            <p style="text-align: center; margin-top: 25px; font-size: 14px; color: #7f8c8d;">
+                Already have an account? <a href="{% url 'login' %}" style="color: var(--primary-teal); font-weight: bold; text-decoration: none;">Log in here</a>
+            </p>
+        </div>
+    </div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // ==========================================
+            // 1. THE PERMANENT EYE ICON TOGGLES
+            // ==========================================
+            const passwordFields = [document.getElementById('id_password1'), document.getElementById('id_password2')];
+
+            passwordFields.forEach(function(pwdInput) {
+                if (pwdInput) {
+                    // Create a protective wrapper around the input
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'relative';
+                    wrapper.style.marginTop = '5px';
+                    wrapper.style.marginBottom = '10px';
+
+                    // Remove margins from the input itself so the wrapper handles the spacing
+                    pwdInput.style.marginTop = '0';
+                    pwdInput.style.marginBottom = '0';
+
+                    // Wrap the input inside the div
+                    pwdInput.parentNode.insertBefore(wrapper, pwdInput);
+                    wrapper.appendChild(pwdInput);
+
+                    // Create our custom FontAwesome eye icon
+                    const eyeIcon = document.createElement('i');
+                    eyeIcon.className = 'fas fa-eye';
+                    eyeIcon.style.position = 'absolute';
+                    eyeIcon.style.right = '15px';
+                    eyeIcon.style.top = '50%';
+                    eyeIcon.style.transform = 'translateY(-50%)';
+                    eyeIcon.style.cursor = 'pointer';
+                    eyeIcon.style.color = '#7f8c8d';
+                    eyeIcon.style.fontSize = '16px';
+                    eyeIcon.style.zIndex = '10';
+
+                    wrapper.appendChild(eyeIcon);
+
+                    // Add the click magic to show/hide the password
+                    eyeIcon.addEventListener('click', function() {
+                        if (pwdInput.type === 'password') {
+                            pwdInput.type = 'text';
+                            eyeIcon.className = 'fas fa-eye-slash';
+                            eyeIcon.style.color = '#2c3e50'; // Make it dark when visible
+                        } else {
+                            pwdInput.type = 'password';
+                            eyeIcon.className = 'fas fa-eye';
+                            eyeIcon.style.color = '#7f8c8d'; // Make it grey when hidden
+                        }
+                    });
+                }
+            });
+
+            // ==========================================
+            // 2. THE REAL-TIME RULES BOX
+            // ==========================================
+            const passwordInput = document.getElementById('id_password1');
+
+            if (passwordInput) {
+                const rulesHTML = `
+                <div id="dynamic-password-rules" style="background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 20px; margin-top: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                    <p style="margin: 0 0 10px 0; font-weight: 600; color: #2c3e50; font-size: 13px;">Password Requirements:</p>
+                    <ul id="js-rules" style="margin: 0; font-size: 13px; line-height: 1.8; list-style-type: none; padding-left: 0;">
+                        <li id="rule-length" style="color: #7f8c8d; transition: color 0.3s;"><i class="fas fa-circle" style="font-size: 8px; margin-right: 10px;"></i>At least 8 characters</li>
+                        <li id="rule-number" style="color: #7f8c8d; transition: color 0.3s;"><i class="fas fa-circle" style="font-size: 8px; margin-right: 10px;"></i>Contains at least one number</li>
+                        <li id="rule-special" style="color: #7f8c8d; transition: color 0.3s;"><i class="fas fa-circle" style="font-size: 8px; margin-right: 10px;"></i>Contains a special character</li>
+                    </ul>
+                </div>
+                `;
+
+                // We now attach the rules to the WRAPPER instead of the input directly
+                passwordInput.parentElement.insertAdjacentHTML('afterend', rulesHTML);
+
+                const ruleLength = document.getElementById('rule-length');
+                const ruleNumber = document.getElementById('rule-number');
+                const ruleSpecial = document.getElementById('rule-special');
+
+                passwordInput.addEventListener('input', function() {
+                    const val = this.value;
+
+                    function updateRule(element, isValid) {
+                        const textOnly = element.innerText.trim();
+                        if (val.length === 0) {
+                            element.style.color = '#7f8c8d';
+                            element.innerHTML = `<i class="fas fa-circle" style="font-size: 8px; margin-right: 10px;"></i>${textOnly}`;
+                        } else if (isValid) {
+                            element.style.color = '#27ae60';
+                            element.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 10px;"></i>${textOnly}`;
+                        } else {
+                            element.style.color = '#e74c3c';
+                            element.innerHTML = `<i class="fas fa-times-circle" style="margin-right: 10px;"></i>${textOnly}`;
+                        }
+                    }
+
+                    updateRule(ruleLength, val.length >= 8);
+                    updateRule(ruleNumber, /\d/.test(val));
+                    updateRule(ruleSpecial, /[!@#$%^&*(),.?":{}|<>]/.test(val));
+                });
+            }
+        });
+    </script>
+</body>
+</html>
